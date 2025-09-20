@@ -12,6 +12,7 @@ const state = {
 	events: [],
 	page: 1,
 	pageSize: 25,
+	sort: { key: 'play_time', dir: 'desc' },
 	nowOnAir: null,
 	lastNowOnAirAt: null,
 	connection: 'offline',
@@ -117,7 +118,19 @@ const renderEvents = () => {
 	eventsEmptyEl.classList.add('hidden');
 	const start = (state.page - 1) * state.pageSize;
 	const end = Math.min(start + state.pageSize, total);
-	const pageItems = state.events.slice(start, end);
+	let working = state.events.slice();
+	const { key, dir } = state.sort || {};
+	working.sort((a, b) => {
+		const av = (a?.[key] ?? '').toString();
+		const bv = (b?.[key] ?? '').toString();
+		if (key === 'play_time') {
+			const ad = new Date(av).getTime() || 0;
+			const bd = new Date(bv).getTime() || 0;
+			return dir === 'asc' ? ad - bd : bd - ad;
+		}
+		return dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+	});
+	const pageItems = working.slice(start, end);
 	const rows = pageItems.map((e) => {
 		const tds = [
 			`<td>${fmtTime(e.play_time)}</td>`,
@@ -245,6 +258,50 @@ if (prevBtn && nextBtn) {
 		const totalPages = Math.max(1, Math.ceil((state.events?.length || 0) / state.pageSize));
 		state.page = Math.min(totalPages, state.page + 1);
 		renderEvents();
+	});
+}
+
+// Sorting handlers
+const setSortIndicator = () => {
+	const indicators = document.querySelectorAll('.sort-indicator');
+	indicators.forEach((el) => {
+		const key = el.getAttribute('data-key');
+		el.removeAttribute('data-dir');
+		if (key === state.sort.key) el.setAttribute('data-dir', state.sort.dir);
+	});
+};
+
+document.querySelectorAll('.th-sortable').forEach((th) => {
+	th.addEventListener('click', () => {
+		const key = th.getAttribute('data-sort-key');
+		if (!key) return;
+		if (state.sort.key === key) {
+			state.sort.dir = state.sort.dir === 'asc' ? 'desc' : 'asc';
+		} else {
+			state.sort.key = key;
+			state.sort.dir = 'asc';
+		}
+		state.page = 1;
+		setSortIndicator();
+		renderEvents();
+	});
+});
+
+// Collapse/expand NOA card
+const toggleBtn = document.getElementById('toggle-noa');
+if (toggleBtn) {
+	toggleBtn.addEventListener('click', () => {
+		const card = document.getElementById('noa-card');
+		const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+		if (expanded) {
+			card.style.display = 'none';
+			toggleBtn.textContent = 'Show';
+			toggleBtn.setAttribute('aria-expanded', 'false');
+		} else {
+			card.style.display = '';
+			toggleBtn.textContent = 'Hide';
+			toggleBtn.setAttribute('aria-expanded', 'true');
+		}
 	});
 }
 
