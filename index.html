@@ -15,7 +15,7 @@
             <span class="h-2 w-2 rounded-full bg-slate-400" id="connection-dot"></span>
             <span id="connection-text">offline</span>
           </span>
-          <button id="refresh-btn" class="rounded-md bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm">Refresh</button>
+          <button id="refresh-btn" class="btn btn-secondary">Refresh</button>
         </div>
       </header>
 
@@ -42,7 +42,7 @@
             <div class="flex flex-wrap items-end gap-3">
               <div class="flex flex-col">
                 <label for="filter-type" class="text-xs text-slate-400">Event Type</label>
-                <select id="filter-type" class="mt-1 rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-sm">
+                <select id="filter-type" class="select mt-1">
                   <option value="SONG">SONG</option>
                   <option value="SPOT">SPOT</option>
                   <option value="JINGLE">JINGLE</option>
@@ -50,18 +50,18 @@
               </div>
               <div class="flex flex-col">
                 <label for="filter-limit" class="text-xs text-slate-400">Limit</label>
-                <input id="filter-limit" type="number" min="1" max="500" value="50" class="mt-1 w-24 rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-sm" />
+                <input id="filter-limit" type="number" min="1" max="500" value="50" class="input mt-1 w-24" />
               </div>
               <div class="flex flex-col">
                 <label for="filter-order" class="text-xs text-slate-400">Order</label>
-                <select id="filter-order" class="mt-1 rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-sm">
+                <select id="filter-order" class="select mt-1">
                   <option value="desc">desc</option>
                   <option value="asc">asc</option>
                 </select>
               </div>
               <div class="ml-auto flex gap-2">
-                <button id="apply-filters" class="rounded-md bg-emerald-600 hover:bg-emerald-500 px-3 py-1 text-sm">Apply</button>
-                <button id="export-csv" class="rounded-md bg-slate-700 hover:bg-slate-600 px-3 py-1 text-sm">Export CSV</button>
+                <button id="apply-filters" class="btn btn-primary">Apply</button>
+                <button id="export-csv" class="btn btn-secondary">Export CSV</button>
               </div>
             </div>
 
@@ -79,6 +79,20 @@
                 <tbody id="events-tbody" class="divide-y divide-slate-700"></tbody>
               </table>
               <div id="events-empty" class="text-sm text-slate-400 hidden mt-3">No events.</div>
+              <div class="mt-3 flex items-center justify-between">
+                <div class="text-sm text-slate-300">Total: <span id="events-total">0</span></div>
+                <div class="flex items-center gap-2">
+                  <label for="page-size" class="text-xs text-slate-400">Rows</label>
+                  <select id="page-size" class="select">
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                  </select>
+                  <button id="prev-page" class="btn btn-secondary" aria-label="Previous page">Prev</button>
+                  <span id="page-info" class="text-sm text-slate-300">1 / 1</span>
+                  <button id="next-page" class="btn btn-secondary" aria-label="Next page">Next</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -10,6 +10,8 @@ const state = {
 		order: 'desc',
 	},
 	events: [],
+	page: 1,
+	pageSize: 25,
 	nowOnAir: null,
 	lastNowOnAirAt: null,
 	connection: 'offline',
@@ -90,13 +92,20 @@ const renderNowOnAir = () => {
 };
 
 const renderEvents = () => {
-	if (!state.events || state.events.length === 0) {
+	const total = state.events.length;
+	const totalEl = document.getElementById('events-total');
+	if (totalEl) totalEl.textContent = String(total);
+
+	if (!state.events || total === 0) {
 		eventsTbodyEl.innerHTML = '';
 		eventsEmptyEl.classList.remove('hidden');
 		return;
 	}
 	eventsEmptyEl.classList.add('hidden');
-	const rows = state.events.map((e) => {
+	const start = (state.page - 1) * state.pageSize;
+	const end = Math.min(start + state.pageSize, total);
+	const pageItems = state.events.slice(start, end);
+	const rows = pageItems.map((e) => {
 		const tds = [
 			`<td class="px-2 py-2">${fmtTime(e.play_time)}</td>`,
 			`<td class="px-2 py-2">${e.event_type ?? ''}</td>`,
@@ -107,6 +116,12 @@ const renderEvents = () => {
 		return `<tr class="hover:bg-slate-700/30">${tds.join('')}</tr>`;
 	});
 	eventsTbodyEl.innerHTML = rows.join('');
+
+	const pageInfo = document.getElementById('page-info');
+	if (pageInfo) {
+		const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+		pageInfo.textContent = `${state.page} / ${totalPages}`;
+	}
 };
 
 // Data loaders
@@ -158,6 +173,7 @@ const applyFilters = () => {
 	state.filters.type = typeSel.value;
 	state.filters.limit = Math.max(1, Math.min(500, Number(limitInput.value) || 50));
 	state.filters.order = orderSel.value;
+	state.page = 1;
 	fetchEventsByType();
 };
 
@@ -195,6 +211,29 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
 	fetchNowOnAir();
 	fetchEventsByType();
 });
+
+const pageSizeSel = /** @type {HTMLSelectElement} */ (document.getElementById('page-size'));
+if (pageSizeSel) {
+	pageSizeSel.addEventListener('change', () => {
+		state.pageSize = Math.max(1, Number(pageSizeSel.value) || 25);
+		state.page = 1;
+		renderEvents();
+	});
+}
+const prevBtn = document.getElementById('prev-page');
+const nextBtn = document.getElementById('next-page');
+if (prevBtn && nextBtn) {
+	prevBtn.addEventListener('click', () => {
+		const totalPages = Math.max(1, Math.ceil((state.events?.length || 0) / state.pageSize));
+		state.page = Math.max(1, state.page - 1);
+		renderEvents();
+	});
+	nextBtn.addEventListener('click', () => {
+		const totalPages = Math.max(1, Math.ceil((state.events?.length || 0) / state.pageSize));
+		state.page = Math.min(totalPages, state.page + 1);
+		renderEvents();
+	});
+}
 
 // Init
 setConnection('offline');
