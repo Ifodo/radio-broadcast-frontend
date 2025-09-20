@@ -71,27 +71,29 @@ const fmtTime = (s) => {
 };
 
 const renderNowOnAir = () => {
-	const item = state.nowOnAir;
-	noaUpdatedEl.textContent = state.lastNowOnAirAt ? fmtTime(state.lastNowOnAirAt) : '—';
-	if (!item) {
-		noaCardEl.innerHTML = `<div class="text-sm text-slate-400">No data</div>`;
-		noaProgressEl.style.width = '0%';
+    const item = state.nowOnAir;
+    if (noaUpdatedEl) noaUpdatedEl.textContent = state.lastNowOnAirAt ? fmtTime(state.lastNowOnAirAt) : '—';
+    if (!item) {
+        if (noaCardEl) noaCardEl.innerHTML = `<div class="text-sm text-slate-400">No data</div>`;
+        if (noaProgressEl) noaProgressEl.style.width = '0%';
         if (noaRowEl) noaRowEl.innerHTML = '';
-		return;
-	}
+        return;
+    }
 	const artist = item.artist ?? '';
 	const title = item.title ?? '';
 	const eventType = item.event_type ?? '';
 	const playTime = item.play_time ?? '';
-	noaCardEl.innerHTML = `
-		<div class="space-y-1">
-			<div class="noa-title">${title || '(untitled)'}</div>
-			<div class="text-slate-300">${artist || ''}</div>
-			<div class="noa-meta">${eventType} • ${fmtTime(playTime)}</div>
-		</div>
-	`;
-	// Progress unknown from API; keep at 0 for now
-	noaProgressEl.style.width = '0%';
+    if (noaCardEl) {
+        noaCardEl.innerHTML = `
+            <div class="space-y-1">
+                <div class="noa-title">${title || '(untitled)'}</div>
+                <div class="text-slate-300">${artist || ''}</div>
+                <div class="noa-meta">${eventType} • ${fmtTime(playTime)}</div>
+            </div>
+        `;
+    }
+    // Progress unknown from API; keep at 0 for now
+    if (noaProgressEl) noaProgressEl.style.width = '0%';
 
     if (noaRowEl) {
         const cells = [
