@@ -85,9 +85,9 @@ const renderNowOnAir = () => {
 	const playTime = item.play_time ?? '';
 	noaCardEl.innerHTML = `
 		<div class="space-y-1">
-			<div class="text-lg font-semibold">${title || '(untitled)'}</div>
+			<div class="noa-title">${title || '(untitled)'}</div>
 			<div class="text-slate-300">${artist || ''}</div>
-			<div class="text-xs text-slate-400">${eventType} • ${fmtTime(playTime)}</div>
+			<div class="noa-meta">${eventType} • ${fmtTime(playTime)}</div>
 		</div>
 	`;
 	// Progress unknown from API; keep at 0 for now
