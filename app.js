@@ -107,13 +107,13 @@ const renderEvents = () => {
 	const pageItems = state.events.slice(start, end);
 	const rows = pageItems.map((e) => {
 		const tds = [
-			`<td class="px-2 py-2">${fmtTime(e.play_time)}</td>`,
-			`<td class="px-2 py-2">${e.event_type ?? ''}</td>`,
-			`<td class="px-2 py-2">${e.artist ?? ''}</td>`,
-			`<td class="px-2 py-2">${e.title ?? ''}</td>`,
-			`<td class="px-2 py-2">${e.filename ?? ''}</td>`,
+			`<td>${fmtTime(e.play_time)}</td>`,
+			`<td>${e.event_type ?? ''}</td>`,
+			`<td>${e.artist ?? ''}</td>`,
+			`<td>${e.title ?? ''}</td>`,
+			`<td>${e.filename ?? ''}</td>`,
 		];
-		return `<tr class="hover:bg-slate-700/30">${tds.join('')}</tr>`;
+		return `<tr>${tds.join('')}</tr>`;
 	});
 	eventsTbodyEl.innerHTML = rows.join('');
 
