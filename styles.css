@@ -104,4 +104,10 @@ body { background: var(--bg); color: var(--fg); margin: 0; font-family: ui-sans-
 .table .col-title { width: auto; }
 .table .col-filename { width: 16rem; }
 
+/* Now On Air row */
+.noa-row { border: 1px solid #334155; border-radius: .375rem; background: linear-gradient(180deg, rgba(16,185,129,.08), rgba(15,23,42,1)); }
+.noa-row .noa-wrap { display: grid; grid-template-columns: 16rem 7rem 20rem 1fr 16rem; gap: .5rem; padding: .5rem; align-items: center; }
+.noa-row .noa-label { font-size: .75rem; color: #86efac; font-weight: 600; padding-right: .5rem; }
+.noa-row .noa-chip { background: rgba(16,185,129,.15); color: #86efac; border: 1px solid rgba(16,185,129,.35); border-radius: 9999px; padding: .125rem .5rem; font-size: .75rem; display: inline-block; }
+
 

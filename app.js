@@ -22,6 +22,7 @@ const $ = (sel) => document.querySelector(sel);
 const noaCardEl = $('#noa-card');
 const noaUpdatedEl = $('#noa-updated');
 const noaProgressEl = $('#noa-progress');
+const noaRowEl = document.getElementById('noa-row');
 const eventsTbodyEl = $('#events-tbody');
 const eventsEmptyEl = $('#events-empty');
 const connectionDotEl = $('#connection-dot');
@@ -74,6 +75,7 @@ const renderNowOnAir = () => {
 	if (!item) {
 		noaCardEl.innerHTML = `<div class="text-sm text-slate-400">No data</div>`;
 		noaProgressEl.style.width = '0%';
+        if (noaRowEl) noaRowEl.innerHTML = '';
 		return;
 	}
 	const artist = item.artist ?? '';
@@ -89,6 +91,17 @@ const renderNowOnAir = () => {
 	`;
 	// Progress unknown from API; keep at 0 for now
 	noaProgressEl.style.width = '0%';
+
+    if (noaRowEl) {
+        const cells = [
+            `<div class="noa-label">NOW ON AIR</div>`,
+            `<div><span class="noa-chip">${eventType || ''}</span></div>`,
+            `<div>${artist || ''}</div>`,
+            `<div class="truncate">${title || '(untitled)'}<span class="text-slate-400"> • ${fmtTime(playTime)}</span></div>`,
+            `<div>${item.filename ?? ''}</div>`,
+        ];
+        noaRowEl.innerHTML = `<div class="noa-wrap">${cells.join('')}</div>`;
+    }
 };
 
 const renderEvents = () => {
