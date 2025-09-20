@@ -98,10 +98,10 @@ const renderNowOnAir = () => {
             `<div class="noa-label">NOW ON AIR</div>`,
             `<div><span class="noa-chip">${eventType || ''}</span></div>`,
             `<div>${artist || ''}</div>`,
-            `<div class="truncate">${title || '(untitled)'}<span class="text-slate-400"> • ${fmtTime(playTime)}</span></div>`,
+            `<div class="truncate">${title || '(untitled)'}<span class=\"text-slate-400\"> • ${fmtTime(playTime)}</span></div>`,
             `<div>${item.filename ?? ''}</div>`,
         ];
-        noaRowEl.innerHTML = `<div class="noa-wrap">${cells.join('')}</div>`;
+        noaRowEl.innerHTML = `<div class=\"noa-wrap\">${cells.join('')}</div>`;
     }
 };
 
