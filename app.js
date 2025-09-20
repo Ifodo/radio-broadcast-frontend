@@ -28,14 +28,15 @@ const connectionTextEl = $('#connection-text');
 // API helper
 const api = async (path, options = {}) => {
     const url = `${BASE_URL}${(onVercel ? `/api${path}` : path)}`;
-	const resp = await fetch(url, {
-		method: options.method || 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			...(options.headers || {}),
-		},
-		body: options.body ? JSON.stringify(options.body) : undefined,
-	});
+    const method = options.method || 'GET';
+    const hasBody = options.body !== undefined && options.body !== null;
+    const headers = { ...(options.headers || {}) };
+    if (hasBody) headers['Content-Type'] = 'application/json';
+    const resp = await fetch(url, {
+        method,
+        headers,
+        body: hasBody ? JSON.stringify(options.body) : undefined,
+    });
 	if (!resp.ok) {
 		const text = await resp.text().catch(() => '');
 		throw new Error(`HTTP ${resp.status} ${resp.statusText} - ${text}`);
