@@ -239,6 +239,43 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
 	fetchNowOnAir();
 	fetchEventsByType();
 });
+// Spots Titles UI
+const spotsPanel = document.getElementById('spots-panel');
+const openSpotsBtn = document.getElementById('open-spots');
+const fetchSpotsBtn = document.getElementById('fetch-spots');
+const spotsResultsEl = document.getElementById('spots-results');
+if (openSpotsBtn && spotsPanel) {
+	openSpotsBtn.addEventListener('click', () => {
+		spotsPanel.classList.toggle('hidden');
+	});
+}
+
+const fetchSpotsTitles = async () => {
+	const filename = /** @type {HTMLInputElement} */ (document.getElementById('spots-filename')).value.trim();
+	const limit = /** @type {HTMLInputElement} */ (document.getElementById('spots-limit')).value.trim();
+	const title = /** @type {HTMLInputElement} */ (document.getElementById('spots-title')).value.trim();
+	if (!filename) {
+		spotsResultsEl.textContent = 'Filename is required (e.g., 2025-09-16.txt)';
+		return;
+	}
+	spotsResultsEl.textContent = 'Loading...';
+	const qs = new URLSearchParams({ filename });
+	if (limit) qs.set('limit', String(Math.max(1, Math.min(500, Number(limit) || 50))));
+	if (title) qs.set('title', title);
+	try {
+		const url = `${BASE_URL}${onVercel ? '/api' : ''}/stats/spots/titles?${qs.toString()}`;
+		const resp = await fetch(url);
+		if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+		const data = await resp.json().catch(() => null);
+		spotsResultsEl.innerHTML = Array.isArray(data) && data.length
+			? `<ul>${data.map((row) => `<li>${(row.title ?? '(untitled)')} — <span class="text-slate-400">${JSON.stringify(row)}</span></li>`).join('')}</ul>`
+			: '<div class="text-slate-400">No results.</div>';
+	} catch (e) {
+		spotsResultsEl.textContent = `Failed to load: ${e?.message || e}`;
+	}
+};
+if (fetchSpotsBtn) fetchSpotsBtn.addEventListener('click', fetchSpotsTitles);
+
 
 const pageSizeSel = /** @type {HTMLSelectElement} */ (document.getElementById('page-size'));
 if (pageSizeSel) {

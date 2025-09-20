@@ -2,7 +2,8 @@
 	"version": 2,
 	"routes": [
 		{ "src": "/api/now-on-air", "dest": "/api/now-on-air.js" },
-		{ "src": "/api/events/by-type", "dest": "/api/events-by-type.js" }
+		{ "src": "/api/events/by-type", "dest": "/api/events-by-type.js" },
+		{ "src": "/api/stats/spots/titles", "dest": "/api/stats-spots-titles.js" }
 	]
 }
 
