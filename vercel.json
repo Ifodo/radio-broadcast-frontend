@@ -1,0 +1,16 @@
+{
+	"version": 2,
+	"builds": [
+		{ "src": "index.html", "use": "@vercel/static" },
+		{ "src": "app.js", "use": "@vercel/static" },
+		{ "src": "api/now-on-air.js", "use": "@vercel/node" },
+		{ "src": "api/events-by-type.js", "use": "@vercel/node" }
+	],
+	"routes": [
+		{ "src": "/api/now-on-air", "dest": "/api/now-on-air.js" },
+		{ "src": "/api/events/by-type", "dest": "/api/events-by-type.js" },
+		{ "src": "/(.*)", "dest": "/index.html" }
+	]
+}
+
+

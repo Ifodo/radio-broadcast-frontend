@@ -1,5 +1,6 @@
 // Configuration
-const BASE_URL = 'https://rbs.elektranbroadcast.com';
+const onVercel = typeof window !== 'undefined' && /vercel\.app$/i.test(location.hostname);
+const BASE_URL = onVercel ? '' : 'https://rbs.elektranbroadcast.com';
 
 // Minimal state
 const state = {
@@ -26,7 +27,7 @@ const connectionTextEl = $('#connection-text');
 
 // API helper
 const api = async (path, options = {}) => {
-    const url = `${BASE_URL}${path}`;
+    const url = `${BASE_URL}${(onVercel ? `/api${path}` : path)}`;
 	const resp = await fetch(url, {
 		method: options.method || 'GET',
 		headers: {
