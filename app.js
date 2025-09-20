@@ -251,29 +251,60 @@ if (openSpotsBtn && spotsPanel) {
 }
 
 const fetchSpotsTitles = async () => {
-	const filename = /** @type {HTMLInputElement} */ (document.getElementById('spots-filename')).value.trim();
-	const limit = /** @type {HTMLInputElement} */ (document.getElementById('spots-limit')).value.trim();
-	const title = /** @type {HTMLInputElement} */ (document.getElementById('spots-title')).value.trim();
-	if (!filename) {
-		spotsResultsEl.textContent = 'Filename is required (e.g., 2025-09-16.txt)';
-		return;
-	}
-	spotsResultsEl.textContent = 'Loading...';
-	const qs = new URLSearchParams({ filename });
-	if (limit) qs.set('limit', String(Math.max(1, Math.min(500, Number(limit) || 50))));
-	if (title) qs.set('title', title);
-	try {
-		const url = `${BASE_URL}${onVercel ? '/api' : ''}/stats/spots/titles?${qs.toString()}`;
-		const resp = await fetch(url);
-		if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-		const data = await resp.json().catch(() => null);
-		spotsResultsEl.innerHTML = Array.isArray(data) && data.length
-			? `<ul>${data.map((row) => `<li>${(row.title ?? '(untitled)')} — <span class="text-slate-400">${JSON.stringify(row)}</span></li>`).join('')}</ul>`
-			: '<div class="text-slate-400">No results.</div>';
-	} catch (e) {
-		spotsResultsEl.textContent = `Failed to load: ${e?.message || e}`;
-	}
+    const filenameInput = /** @type {HTMLInputElement} */ (document.getElementById('spots-filename'));
+    const limitInput = /** @type {HTMLInputElement} */ (document.getElementById('spots-limit'));
+    const titleInput = /** @type {HTMLInputElement} */ (document.getElementById('spots-title'));
+
+    let filename = filenameInput.value.trim();
+    const limit = limitInput.value.trim();
+    const title = titleInput.value.trim();
+
+    if (!filename) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        filename = `${yyyy}-${mm}-${dd}.txt`;
+        filenameInput.value = filename;
+    }
+
+    spotsResultsEl.textContent = 'Loading...';
+    const qs = new URLSearchParams({ filename });
+    if (limit) qs.set('limit', String(Math.max(1, Math.min(500, Number(limit) || 50))));
+    if (title) qs.set('title', title);
+    try {
+        const url = `${BASE_URL}${onVercel ? '/api' : ''}/stats/spots/titles?${qs.toString()}`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json().catch(() => null);
+
+        let rows = [];
+        if (Array.isArray(data)) rows = data;
+        else if (data && Array.isArray(data.items)) rows = data.items;
+        else if (data && Array.isArray(data.results)) rows = data.results;
+
+        if (rows.length) {
+            const list = rows.map((row) => {
+                const titleText = row.title ?? row.name ?? '(untitled)';
+                const count = row.count ?? row.total ?? '';
+                return `<li><span class="font-semibold">${titleText}</span> ${count !== '' ? `— <span class=\"text-slate-400\">${count}</span>` : ''}</li>`;
+            }).join('');
+            spotsResultsEl.innerHTML = `<ul>${list}</ul>`;
+        } else {
+            // Fallback: pretty print JSON
+            spotsResultsEl.innerHTML = data ? `<pre>${escapeHtml(JSON.stringify(data, null, 2))}</pre>` : '<div class="text-slate-400">No results.</div>';
+        }
+    } catch (e) {
+        spotsResultsEl.textContent = `Failed to load: ${e?.message || e}`;
+    }
 };
+
+const escapeHtml = (s) => s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 if (fetchSpotsBtn) fetchSpotsBtn.addEventListener('click', fetchSpotsTitles);
 
 
