@@ -1,19 +1,8 @@
 {
 	"version": 2,
-	"builds": [
-		{ "src": "index.html", "use": "@vercel/static" },
-		{ "src": "app.js", "use": "@vercel/static" },
-		{ "src": "styles.css", "use": "@vercel/static" },
-		{ "src": "api/now-on-air.js", "use": "@vercel/node" },
-		{ "src": "api/events-by-type.js", "use": "@vercel/node" }
-	],
 	"routes": [
 		{ "src": "/api/now-on-air", "dest": "/api/now-on-air.js" },
-		{ "src": "/api/events/by-type", "dest": "/api/events-by-type.js" },
-		// Serve static assets normally (files with extensions)
-		{ "src": "/(.+\..+)$", "dest": "/$1" },
-		// SPA fallback only for extensionless paths and not /api
-		{ "src": "/(?!api/)(.*)", "dest": "/index.html" }
+		{ "src": "/api/events/by-type", "dest": "/api/events-by-type.js" }
 	]
 }
 
