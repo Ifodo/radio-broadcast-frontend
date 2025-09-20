@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jazler Monitor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+      <header class="flex items-center justify-between">
+        <h1 class="text-xl font-semibold">Jazler Monitoring</h1>
+        <div class="flex items-center gap-3">
+          <span id="connection-pill" class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm bg-slate-700">
+            <span class="h-2 w-2 rounded-full bg-slate-400" id="connection-dot"></span>
+            <span id="connection-text">offline</span>
+          </span>
+          <button id="refresh-btn" class="rounded-md bg-slate-800 hover:bg-slate-700 px-3 py-1 text-sm">Refresh</button>
+        </div>
+      </header>
+
+      <section class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div class="lg:col-span-1">
+          <div class="rounded-lg border border-slate-700 bg-slate-800 p-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-medium">Now On Air</h2>
+              <span id="noa-updated" class="text-xs text-slate-400">—</span>
+            </div>
+            <div id="noa-card" class="mt-4">
+              <div class="text-sm text-slate-400">No data</div>
+            </div>
+            <div class="mt-4">
+              <div class="h-2 w-full overflow-hidden rounded bg-slate-700">
+                <div id="noa-progress" class="h-2 bg-emerald-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="rounded-lg border border-slate-700 bg-slate-800 p-4">
+            <div class="flex flex-wrap items-end gap-3">
+              <div class="flex flex-col">
+                <label for="filter-type" class="text-xs text-slate-400">Event Type</label>
+                <select id="filter-type" class="mt-1 rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-sm">
+                  <option value="SONG">SONG</option>
+                  <option value="SPOT">SPOT</option>
+                  <option value="JINGLE">JINGLE</option>
+                </select>
+              </div>
+              <div class="flex flex-col">
+                <label for="filter-limit" class="text-xs text-slate-400">Limit</label>
+                <input id="filter-limit" type="number" min="1" max="500" value="50" class="mt-1 w-24 rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-sm" />
+              </div>
+              <div class="flex flex-col">
+                <label for="filter-order" class="text-xs text-slate-400">Order</label>
+                <select id="filter-order" class="mt-1 rounded-md bg-slate-900 border border-slate-700 px-2 py-1 text-sm">
+                  <option value="desc">desc</option>
+                  <option value="asc">asc</option>
+                </select>
+              </div>
+              <div class="ml-auto flex gap-2">
+                <button id="apply-filters" class="rounded-md bg-emerald-600 hover:bg-emerald-500 px-3 py-1 text-sm">Apply</button>
+                <button id="export-csv" class="rounded-md bg-slate-700 hover:bg-slate-600 px-3 py-1 text-sm">Export CSV</button>
+              </div>
+            </div>
+
+            <div class="mt-4 overflow-auto">
+              <table class="min-w-full text-sm">
+                <thead class="text-slate-300">
+                  <tr>
+                    <th class="px-2 py-2 text-left font-medium">Time</th>
+                    <th class="px-2 py-2 text-left font-medium">Type</th>
+                    <th class="px-2 py-2 text-left font-medium">Artist</th>
+                    <th class="px-2 py-2 text-left font-medium">Title</th>
+                    <th class="px-2 py-2 text-left font-medium">Filename</th>
+                  </tr>
+                </thead>
+                <tbody id="events-tbody" class="divide-y divide-slate-700"></tbody>
+              </table>
+              <div id="events-empty" class="text-sm text-slate-400 hidden mt-3">No events.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+  </html>
+
+
