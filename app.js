@@ -63,9 +63,14 @@ const setView = (view) => {
     document.querySelectorAll('[data-view-panel]')
         .forEach((el) => el.classList.toggle('hidden', el.getAttribute('data-view-panel') !== view));
 };
-document.getElementById('nav-home')?.addEventListener('click', () => setView('home'));
-document.getElementById('nav-spots-titles')?.addEventListener('click', () => setView('spots-titles'));
-document.getElementById('nav-advert-logs')?.addEventListener('click', () => setView('advert-logs'));
+const setActiveNav = (view) => {
+    document.querySelectorAll('#sidebar .nav-link').forEach((el) => {
+        el.classList.toggle('active', el.getAttribute('data-view') === view);
+    });
+};
+document.getElementById('nav-home')?.addEventListener('click', () => { setView('home'); setActiveNav('home'); });
+document.getElementById('nav-spots-titles')?.addEventListener('click', () => { setView('spots-titles'); setActiveNav('spots-titles'); });
+document.getElementById('nav-advert-logs')?.addEventListener('click', () => { setView('advert-logs'); setActiveNav('advert-logs'); });
 
 // Advert logs (spots all)
 const advertResultsEl = document.getElementById('advert-results');

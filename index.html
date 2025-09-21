@@ -21,12 +21,13 @@
 
       <section class="mt-6 grid grid-cols-1 gap-6">
         <div class="flex">
-          <nav id="sidebar" class="w-56 mr-4">
-            <ul class="text-sm">
-              <li><button data-view="home" class="btn btn-secondary w-full" id="nav-home">Home</button></li>
-              <li class="mt-2"><button data-view="spots-titles" class="btn btn-secondary w-full" id="nav-spots-titles">Spot Titles</button></li>
-              <li class="mt-2"><button data-view="advert-logs" class="btn btn-secondary w-full" id="nav-advert-logs">Advert Logs</button></li>
-            </ul>
+          <nav id="sidebar" class="w-56 mr-4 sidebar">
+            <div class="nav">
+              <div class="nav-section">Navigate</div>
+              <button data-view="home" class="nav-link active" id="nav-home"><span class="nav-icon">🏠</span><span>Home</span></button>
+              <button data-view="spots-titles" class="nav-link" id="nav-spots-titles"><span class="nav-icon">🏷️</span><span>Spot Titles</span></button>
+              <button data-view="advert-logs" class="nav-link" id="nav-advert-logs"><span class="nav-icon">📊</span><span>Advert Logs</span></button>
+            </div>
           </nav>
           <div class="flex-1 rounded-lg border border-slate-700 bg-slate-800 p-4">
             <div class="flex flex-wrap items-end gap-3">
