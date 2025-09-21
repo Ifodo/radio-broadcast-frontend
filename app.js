@@ -58,6 +58,46 @@ const setConnection = (status) => {
 		status === 'connected' ? 'bg-emerald-500' : status === 'reconnecting' ? 'bg-amber-400' : 'bg-slate-400'
 	}`;
 };
+// View switching
+const setView = (view) => {
+    document.querySelectorAll('[data-view-panel]')
+        .forEach((el) => el.classList.toggle('hidden', el.getAttribute('data-view-panel') !== view));
+};
+document.getElementById('nav-home')?.addEventListener('click', () => setView('home'));
+document.getElementById('nav-spots-titles')?.addEventListener('click', () => setView('spots-titles'));
+document.getElementById('nav-advert-logs')?.addEventListener('click', () => setView('advert-logs'));
+
+// Advert logs (spots all)
+const advertResultsEl = document.getElementById('advert-results');
+const fetchAdverts = async () => {
+    const page = Math.max(1, Number((document.getElementById('adv-page'))?.value || 1));
+    const limit = Math.max(1, Math.min(500, Number((document.getElementById('adv-limit'))?.value || 50)));
+    advertResultsEl.textContent = 'Loading...';
+    const url = `${BASE_URL}${onVercel ? '/api' : ''}/stats/spots/all?page=${page}&limit=${limit}`;
+    try {
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        const items = Array.isArray(data?.items) ? data.items : [];
+        if (!items.length) {
+            advertResultsEl.innerHTML = '<div class="text-slate-400">No results.</div>';
+            return;
+        }
+        const html = items.map((it) => {
+            const files = Array.isArray(it.files) ? it.files.map(f => `${f.filename} (${f.count})`).join(', ') : '';
+            return `<div class=\"rounded-md border border-slate-700 p-3 mb-2\">
+                <div class=\"font-semibold\">${it.title}</div>
+                <div class=\"text-slate-400\">Total: ${it.total_count} • ${fmtTime(it.first_air_timestamp)} → ${fmtTime(it.last_air_timestamp)}</div>
+                <div class=\"text-slate-300 mt-1\">${files}</div>
+            </div>`;
+        }).join('');
+        advertResultsEl.innerHTML = html;
+    } catch (e) {
+        advertResultsEl.textContent = `Failed to load: ${e?.message || e}`;
+    }
+};
+document.getElementById('fetch-adverts')?.addEventListener('click', fetchAdverts);
+
 
 const fmtTime = (s) => {
 	if (!s) return '';

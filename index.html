@@ -20,8 +20,15 @@
       </header>
 
       <section class="mt-6 grid grid-cols-1 gap-6">
-        <div>
-          <div class="rounded-lg border border-slate-700 bg-slate-800 p-4">
+        <div class="flex">
+          <nav id="sidebar" class="w-56 mr-4">
+            <ul class="text-sm">
+              <li><button data-view="home" class="btn btn-secondary w-full" id="nav-home">Home</button></li>
+              <li class="mt-2"><button data-view="spots-titles" class="btn btn-secondary w-full" id="nav-spots-titles">Spot Titles</button></li>
+              <li class="mt-2"><button data-view="advert-logs" class="btn btn-secondary w-full" id="nav-advert-logs">Advert Logs</button></li>
+            </ul>
+          </nav>
+          <div class="flex-1 rounded-lg border border-slate-700 bg-slate-800 p-4">
             <div class="flex flex-wrap items-end gap-3">
               <div class="flex flex-col">
                 <label for="filter-type" class="text-xs text-slate-400">Event Type</label>
@@ -49,7 +56,7 @@
               </div>
             </div>
 
-            <div id="spots-panel" class="mt-3 hidden">
+            <div id="spots-panel" class="mt-3 hidden" data-view-panel="spots-titles">
               <div class="rounded-md border border-slate-700 p-3 bg-slate-900">
                 <div class="flex flex-wrap items-end gap-3">
                   <div class="flex flex-col">
@@ -72,9 +79,9 @@
               </div>
             </div>
 
-            <div id="noa-row" class="noa-row mt-3"></div>
+            <div id="noa-row" class="noa-row mt-3" data-view-panel="home"></div>
 
-            <div class="mt-4 overflow-auto">
+            <div class="mt-4 overflow-auto" data-view-panel="home">
               <table class="table text-sm">
                 <thead class="text-slate-300">
                   <tr>
@@ -102,6 +109,17 @@
                   <button id="next-page" class="btn btn-secondary" aria-label="Next page">Next</button>
                 </div>
               </div>
+            </div>
+
+            <div id="advert-logs" class="mt-4 hidden" data-view-panel="advert-logs">
+              <div class="flex items-center gap-2">
+                <label for="adv-page" class="text-xs text-slate-400">Page</label>
+                <input id="adv-page" type="number" min="1" value="1" class="input w-20" />
+                <label for="adv-limit" class="text-xs text-slate-400">Limit</label>
+                <input id="adv-limit" type="number" min="1" max="500" value="50" class="input w-24" />
+                <button id="fetch-adverts" class="btn btn-primary ml-2">Fetch</button>
+              </div>
+              <div id="advert-results" class="mt-3 text-sm"></div>
             </div>
           </div>
         </div>
